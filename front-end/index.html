@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>WorkDay3</title>
+</head>
+
+<body>
+    <div class="header">
+        <ul>
+            <li><a href="#stats">Statistics</a></li>
+            <li><a href="#highlights">Highlights</a></li>
+            <li><a href="#photos">Photos</a></li>
+            <li><a href="#register">Register</a></li>
+        </ul>
+    </div>
+    <div id="people">
+        <div class="person" v-for="(result,index) in results">
+            <img :src="result.avatar" v-bind:alt="results">
+            <p> Number: {{ result.number }} </p>
+            <p> Name: {{ result.first_name }} {{ result.last_name }} </p>
+            <input v-on:click="del(index)" type="button" value="delete" class="btn">
+        </div>
+    </div>
+
+
+    <div class="block">
+        <form id="form">
+            <label for="number">Игровой номер</label><input id="number" type="number" class="menu" placeholder="1" required><span></span><br>
+            <label for="name">Имя</label><input id="name" type="text" class="menu" placeholder="Иван" required><span></span><br>
+            <label for="surname">Фамилия</label><input id="surname" type="text" class="menu" placeholder="Иванов" required><span></span><br>
+            <label for="image">Ссылка на картинку</label><input id="image" type="url" class="menu" placeholder="https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/1628386.png" required><span></span><br>
+            <!-- <label for="password">Пароль</label><input id="password"  type="password" class="menu" pattern=".{5,}" required placeholder="Введите пароль"><span></span><br>
+               <label for="password">Повторите</label><input ud="password" type="password" class="menu" placeholder="Повторите пароль" required pattern=".{5,}"><span></span><br> -->
+        </form>
+
+        <div class="button">
+            <label class="qwe"><input id="button" form="form" type="submit">Добавить игрока</label>
+        </div>
+    </div>
+
+    <script src="work3.js"></script>
+    <script>
+        let myButton = document.getElementById('button');
+        myButton.addEventListener('click', function(ev) {
+            let number = document.forms['form'].elements['number'].value;
+            let first_name = document.forms['form'].elements['name'].value;
+            let last_name = document.forms['form'].elements['surname'].value;
+            let img_url = document.forms['form'].elements['image'].value;
+            // let pass = document.forms['form'].elements['password'].value;
+
+            let obj = {
+                number: number,
+                first_name: first_name,
+                last_name: last_name,
+                avatar: img_url
+            };
+
+            if (obj.number != null && obj.first_name != "" && obj.last_name != "" && obj.avatar != "") {
+                fetch('http://localhost:3000/users', {
+                        method: 'POST',
+                        body: JSON.stringify(obj),
+                        headers: {
+                            'content-type': 'application/json'
+                        }
+                    })
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .catch(alert);
+                    alert("Player has been added")
+            }
+        })
+    </script>
+
+</body>
+
+</html>
